@@ -11,15 +11,16 @@
 - [4. SQL语法特征](#4-sql语法特征)
 
 <!-- /TOC -->
+
 ## 1. 基本命令
 
 -   打开命令行, 输入`mysql -uroot -p`, 回车输入密码
 -   `show databases;` 查看有哪些数据库（记得分号！）
--   `use 数据库名` 使用某个数据库
--   `show tables` 查看数据库内有哪些表
--   `exit` 退出MySQL的命令行环境
+-   `use 数据库名;` 使用某个数据库
+-   `show tables;` 查看数据库内有哪些表
+-   `exit;` 退出MySQL的命令行环境
 
-## 2. 图形化工具: DBeaver
+## 2. 图形化工具: DBeaver、Navicat
 
 ## 3. SQL语言分类
 
