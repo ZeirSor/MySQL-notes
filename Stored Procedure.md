@@ -657,10 +657,10 @@ begin
 	end while;
 
 	close course_cur;
-	
+
 	-- 使用 COALESCE 函数替换 NULL 为 0
 	UPDATE score_distribution
-	SET 
+	SET
 		不及格人数 = COALESCE(不及格人数, 0),
 		`70--80分人数` = COALESCE(`70--80分人数`, 0),
 		`80--90分人数` = COALESCE(`80--90分人数`, 0),
@@ -670,13 +670,7 @@ begin
 end;
 
 call count_grade_distribution();
-
-
-
-drop procedure count_grade_distribution;
 ```
-
-
 
 ### **★★★注意：游标和handler都要放在创建表的前面**
 
