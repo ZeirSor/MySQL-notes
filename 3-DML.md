@@ -745,3 +745,78 @@ INNER JOIN course c ON sc.Cno = c.Cno;
 ```
 
 使用反引号 ` 包围表名是 MySQL 中的一种常见做法，以处理包含特殊字符或与保留关键字冲突的表名。这样可以确保 MySQL 正确解释表名。请注意，不同的数据库管理系统可能有不同的方法来处理特殊字符的表名，所以在具体的数据库系统中，你可能需要查阅相关文档以了解正确的语法。
+
+## 复杂题目
+
+### `所有`
+
+```sql
+mysql> desc course
+    -> ;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| Cno          | varchar(20) | NO   | PRI | NULL    |       |
+| Cname        | varchar(20) | NO   |     | NULL    |       |
+| Chours       | varchar(20) | NO   |     | NULL    |       |
+| Credit       | float       | YES  |     | NULL    |       |
+| Tno          | varchar(15) | YES  |     | NULL    |       |
+| StudentCount | int         | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+6 rows in set (0.04 sec)
+
+mysql> desc sc;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| Sno   | varchar(20) | NO   | PRI | NULL    |       |
+| Cno   | varchar(20) | NO   | PRI | NULL    |       |
+| Score | int         | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.03 sec)
+
+mysql> desc student;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| Sno     | varchar(20)  | NO   | PRI | NULL    |       |
+| Sname   | varchar(20)  | NO   |     | NULL    |       |
+| Ssex    | varchar(20)  | NO   |     | NULL    |       |
+| Sage    | int          | NO   |     | NULL    |       |
+| Dno     | varchar(20)  | NO   |     | NULL    |       |
+| Sclass  | varchar(20)  | YES  |     | NULL    |       |
+| address | varchar(255) | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+7 rows in set (0.03 sec)
+```
+
+#### 检索学过001号教师主讲的所有课程的所有同学的姓名
+
+如果要检索那些选完001号教师主讲的所有课程的学生姓名，你需要使用子查询来实现。以下是一个SQL查询，可以找到这些学生的姓名：
+
+```sql
+SELECT DISTINCT Sname
+FROM student
+WHERE Sno IN (
+    SELECT DISTINCT s.Sno
+    FROM student s
+    INNER JOIN sc ON s.Sno = sc.Sno
+    INNER JOIN course c ON sc.Cno = c.Cno
+    WHERE c.Tno = '001'
+    GROUP BY s.Sno
+    HAVING COUNT(DISTINCT c.Cno) = (
+        SELECT COUNT(*)
+        FROM course
+        WHERE Tno = '001'
+    )
+);
+```
+
+这个查询执行以下操作：
+
+1. 内部子查询首先找到选修了001号教师主讲的课程的学生（在 `sc` 表中有记录的学生）。
+2. 子查询使用 `GROUP BY` 学生编号，并使用 `HAVING` 子句来确保学生选修了001号教师主讲的所有课程。
+3. 外部查询选择符合子查询条件的学生的姓名。
+
+这将返回选修了001号教师主讲的所有课程的学生的姓名列表。
+
