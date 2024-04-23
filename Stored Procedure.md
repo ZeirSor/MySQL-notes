@@ -271,9 +271,7 @@ delimiter $$
 create procedure proc14_case(in pay_type int)
 begin
   case pay_type
-        when  1 
-          then 
-              select '微信支付' ;
+        when  1 then select '微信支付' ;
         when  2 then select '支付宝支付' ;
         when  3 then select '银行卡支付';
       else select '其他方式支付';
